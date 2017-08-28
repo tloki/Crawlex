@@ -3,7 +3,7 @@
 
 
 class page:
-    id = -1 #jedistven id. Dan pri inicijalizaciji.
+    page_id = -1 #jedistven id. Dan pri inicijalizaciji.
     father_id = -1  #id čvora s kojeg je došao. Dan pri inicijalizaciji
     url = ""  #url same stranice... bilo bi dobro da bude u punom obliku pa se preko njega moze dalje kopati. Dan pri inicijalizaciji
     emails = []  #svi mailovi sa stranice
@@ -14,7 +14,7 @@ class page:
 
 
     def __init__(self,id_arg,fid_arg,url_arg):
-        self.id = id_arg
+        self.page_id = id_arg
         self.father_id = fid_arg
         self.url = url_arg
 
