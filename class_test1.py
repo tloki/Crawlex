@@ -8,6 +8,9 @@ class page:
     url = ""  #url same stranice... bilo bi dobro da bude u punom obliku pa se preko njega moze dalje kopati. Dan pri inicijalizaciji
     emails = []  #svi mailovi sa stranice
     links = [] #svi linkovi sa stranice
+    page_rank = 1.0 #varijabla potrebna za pagerank algoritam (od stvari koje su jos potrebne, trebat ce nam i izlazni stupanj cvora
+                    #za sto vec postoji naredba u networkxu (out_degree)  )
+
 
     #e sad ne znam kako tocno zelimo da bude koncipirano ovo sto sam napravio 2 liste za mailove i linkove i da se onda
     #preko njih kopa
@@ -33,3 +36,4 @@ class page:
 #nisam mogao raditi na funkciama get_mails i get_links jer za to trebamo parser i ono za tekst
 
 #Abramovic
+
