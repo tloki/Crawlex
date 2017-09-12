@@ -1,4 +1,4 @@
-from class_test1 import page
+from class_test1 import Page
 import networkx as nx
 import matplotlib.pyplot as plt
 
@@ -48,13 +48,13 @@ def pageRank(graph_arg,list_arg):
 #kreiranje sample liste iz koje se kreira i sam graf
 l = []
 
-l.append(page(1,0,"index"))
-l.append(page(2,1,"biografija"))
-l.append(page(3,1,"djela"))
-l.append(page(5,3,"rana_djela"))
-l.append(page(6,3,"kasna_djela"))
-l.append(page(4,1,"kontakt"))
-l.append(page(7,1,"slike"))
+l.append(Page(1, 0, "index"))
+l.append(Page(2, 1, "biografija"))
+l.append(Page(3, 1, "djela"))
+l.append(Page(5, 3, "rana_djela"))
+l.append(Page(6, 3, "kasna_djela"))
+l.append(Page(4, 1, "kontakt"))
+l.append(Page(7, 1, "slike"))
 
 test_graf = nx.DiGraph()
 test_graf.add_nodes_from(l)
