@@ -3,7 +3,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 
-MAX_ITER = 10  #broj iteracija page_rank algoritma
+MAX_ITER = 30  #broj iteracija page_rank algoritma
 
 #zamisilio sam pageRank kao void funkciju koja nista ne vraca vec samo mijenja pagerank vrijednosti svakog cvora, elementa liste
 #isto tako bilo bi dobro (mozda) da imamo posebno listu sa svim stranicama i posebno graf s tim elementima liste
@@ -48,13 +48,13 @@ def pageRank(graph_arg,list_arg):
 #kreiranje sample liste iz koje se kreira i sam graf
 l = []
 
-l.append(Page(1, 0, "index"))
-l.append(Page(2, 1, "biografija"))
-l.append(Page(3, 1, "djela"))
-l.append(Page(5, 3, "rana_djela"))
-l.append(Page(6, 3, "kasna_djela"))
-l.append(Page(4, 1, "kontakt"))
-l.append(Page(7, 1, "slike"))
+l.append(Page(1, "index"))
+l.append(Page(2, "biografija"))
+l.append(Page(3, "djela"))
+l.append(Page(5, "rana_djela"))
+l.append(Page(6, "kasna_djela"))
+l.append(Page(4, "kontakt"))
+l.append(Page(7, "slike"))
 
 test_graf = nx.DiGraph()
 test_graf.add_nodes_from(l)
@@ -90,7 +90,7 @@ for i in range(len(l)):
 print(nx.info(test_graf))
 
 #crta graf
-nx.draw(test_graf,node_size =prl)
+nx.draw_networkx(test_graf,node_size =prl)
 plt.show()
 
 #Abramovic
