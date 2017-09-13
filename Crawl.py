@@ -26,9 +26,12 @@ class Crawl:
 
                 for local_url in local_links:
                     if local_url not in visited_pages:
-                        page_queue.append(Page.Page(0, local_url))
+                        new_page = Page.Page(0, local_url).url
+                        page_queue.append(new_page)
+                        print(new_page)
+        print(visited_pages)
 
 
 if __name__ == '__main__':
-    c = Crawl('icm.hr', 10**6, 10**6)
+    c = Crawl('www.python.org', 10**6, 10**6)
     c.crawl()

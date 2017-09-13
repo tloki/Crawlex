@@ -34,7 +34,7 @@ class Page(HTMLParser):
         # funkcija koja upotpunjava linkove
         # funkcija na pocetak lokalnih linkova koji nemaju scheme i netloc dodaje originalni url (tj. scheme i netlock)
         for nepotpuni_url in self.local_links:
-            if nepotpuni_url.startswith('/') or nepotpuni_url.startswith('#') or nepotpuni_url.startswith('javascript'):
+            if nepotpuni_url.startswith('/') or nepotpuni_url.startswith('#') or nepotpuni_url.startswith('javascript'): # TODO: makni ovaj javascript
                 self.absolute_local_links.append('http://' + self.url + nepotpuni_url)
             else:
                 self.absolute_local_links.append(nepotpuni_url)
@@ -50,11 +50,12 @@ class Page(HTMLParser):
             #TODO: should handle this...
             return []
         self.feed(self.page_source.read().decode('utf8'))
+        # print(self.all_links)
         self.local_links = self.same_page_check(self.all_links)
         # funkcija za trazenje linkova, odnosno daljnje granjanje, crawlanje, iteriranje kako god
         # posprema u listu links
         # cim nadje novi link provjerava ima li vec takav cvor, ako ne on odmah radi i novi cvor (za father_id prosljeduje svoj id i tako se kod grana)
-        return self.local_links
+        return self.absolute_local_links
 
     def __repr__(self):
         return self.url
@@ -67,11 +68,12 @@ class Page(HTMLParser):
             url = 'http://' + url
 
         from urllib.error import URLError
+        from http.client import InvalidURL
         try:
             self.page_source = urllib.request.urlopen(url)
-        except URLError:
+        except (URLError, InvalidURL) as e:
             # page not found, probably 404
-            return
+            return False
 
         if self.page_source.getcode() == 301:
             url = url.replace('http://', 'https://')
