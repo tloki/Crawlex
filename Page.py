@@ -28,7 +28,7 @@ class Page(HTMLParser):
         self.all_links = []
         self.page_source = None
         self.absolute_local_links = []
-        self.check_links()
+        self.check_url()
 
     def check_links(self):
         # funkcija koja upotpunjava linkove
@@ -46,6 +46,9 @@ class Page(HTMLParser):
 
     def get_links(self):
         self.url = self.network_location(self.url)
+        if self.page_source is None:
+            #TODO: should handle this...
+            return []
         self.feed(self.page_source.read().decode('utf8'))
         self.local_links = self.same_page_check(self.all_links)
         # funkcija za trazenje linkova, odnosno daljnje granjanje, crawlanje, iteriranje kako god
@@ -62,7 +65,13 @@ class Page(HTMLParser):
 
         if not url.startswith('http'):
             url = 'http://' + url
-        self.page_source = urllib.request.urlopen(url)
+
+        from urllib.error import URLError
+        try:
+            self.page_source = urllib.request.urlopen(url)
+        except URLError:
+            # page not found, probably 404
+            return
 
         if self.page_source.getcode() == 301:
             url = url.replace('http://', 'https://')
@@ -72,7 +81,7 @@ class Page(HTMLParser):
         return self.page_source.getcode() == 200
 
     def network_location(self, url):
-        print(url)
+        # print(url)
         o = urlparse(url)   # , scheme='http')
         o = o.netloc
         return o

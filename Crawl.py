@@ -1,6 +1,7 @@
 import Page
 import networkx as nx
 
+
 class Crawl:
     def __init__(self, url_arg, max_iter_arg, max_time_arg):
         self.max_iter = max_iter_arg
@@ -20,7 +21,14 @@ class Crawl:
             if current_page not in visited_pages:
                 visited_pages |= {current_page}
                 p = Page.Page(0, current_page)
-                
-                for i in p.get_links():
-                    if i not in visited_pages:
-                        page_queue.append(i)
+
+                local_links = p.get_links()
+
+                for local_url in local_links:
+                    if local_url not in visited_pages:
+                        page_queue.append(Page.Page(0, local_url))
+
+
+if __name__ == '__main__':
+    c = Crawl('icm.hr', 10**6, 10**6)
+    c.crawl()
