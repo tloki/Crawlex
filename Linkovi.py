@@ -7,13 +7,13 @@ all_links = []
 local_links = []
 
 class LinkParser(HTMLParser):
-    
-    def handle_starttag(self, tag, attrs):       
+
+    def handle_starttag(self, tag, attrs):
         for name,value in attrs:
             if name == 'href':
                 all_links.append(value)
         return
-        
+
 def same_page_check(home_url,all_links):
     for url in all_links:
         if usporedba(home_url,url) == True:
@@ -39,7 +39,7 @@ def main():
         url = 'http://' + url
     a = urllib.request.urlopen(url)
 
-    if a.getcode == 301:
+    if a.getcode() == 301:
         url = url.replace('http://', 'https://')
         a = urllib.request.urlopen(url)
 
