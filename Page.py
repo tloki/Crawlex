@@ -20,7 +20,7 @@ class Page(HTMLParser):
     #preko njih kopa
 
 
-    def __init__(self,id_arg,url_arg):
+    def __init__(self,id_arg,url_arg:str):
         super().__init__()
         self.page_id = id_arg
         self.url = url_arg
@@ -30,6 +30,17 @@ class Page(HTMLParser):
         self.local_links = []
         self.all_links = []
         self.page_source = None
+        self.absolute_local_links = []
+
+    def check_links(self):
+        #funkcija koja upotpunjava linkove
+        #funkcija na pocetak lokalnih linkova koji nemaju scheme i netloc dodaje originalni url (tj. scheme i netlock)
+        for nepotpuni_url in self.local_links:
+            if nepotpuni_url.startswith('/') or nepotpuni_url.startswith('#') or nepotpuni_url.startswith('javascript'):
+                self.absolute_local_links.append('http://' + self.url + nepotpuni_url)
+            else:
+                self.absolute_local_links.append(nepotpuni_url)
+        return self.absolute_local_links
 
     def get_mails(self):
         #funkcija za trazenje mailova... sve sto treba (url i lista koja pohranjuje mailove) vec je u klasi
@@ -38,17 +49,16 @@ class Page(HTMLParser):
     def get_links(self):
         self.url = self.network_location(self.url)
         self.feed(self.page_source.read().decode('utf8'))
-        self.same_page_check(self.all_links)
+        self.local_links = self.same_page_check(self.all_links)
         #funkcija za trazenje linkova, odnosno daljnje granjanje, crawlanje, iteriranje kako god
         #posprema u listu links
         #cim nadje novi link provjerava ima li vec takav cvor, ako ne on odmah radi i novi cvor (za father_id prosljeduje svoj id i tako se kod grana)
-        return
+        return self.local_links
 
     def __repr__(self):
         return self.url
 
     def check_url(self):
-
         url = self.url
         original_url = url
 
