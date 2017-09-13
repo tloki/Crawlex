@@ -82,6 +82,7 @@ class App(QWidget):
         self.maxi_input.setFixedWidth(77)
         self.maxi_input.setStyleSheet("color: rgba(255,255,255,0.77); background-color: rgba(255,255,255,0.3); border: none; ")
         self.maxi_input.setText("1000")
+        self.maxi_input.textChanged[str].connect(self.maxiChange)
 
         # iteration limit label
         self.maxi_label = QLabel(self)
@@ -105,6 +106,7 @@ class App(QWidget):
         self.maxt_input.setFixedWidth(77)
         self.maxt_input.setStyleSheet("color: rgba(255,255,255,0.77); background-color: rgba(255,255,255,0.3); border: none; ")
         self.maxt_input.setText("1000")
+        self.maxt_input.textChanged[str].connect(self.maxtChange)
 
         # time limit label
         self.maxt_label = QLabel(self)
@@ -165,14 +167,38 @@ class App(QWidget):
 
         self.show()
 
+    #funkcije pri promijeni teksta
     def urlChange(self):
         self.temp_string = self.url_input.text()
         #self.temp_Page.url = self.temp_string
-        print("doso tu")
         if True: ## temp_Page.check_url():  TO DO !!!
                 self.url_ok = True;
         else:
                 self.url_ok = False;
+        self.changeCheck()
+        return
+
+    def maxiChange(self):
+        self.temp_string = self.maxi_input.text()
+
+        try:
+            int(self.temp_string)
+            self.iteration_ok = True
+        except ValueError:
+            self.iteration_ok = False
+
+        self.changeCheck()
+        return
+
+    def maxtChange(self):
+        self.temp_string = self.maxt_input.text()
+
+        try:
+            int(self.temp_string)
+            self.time_ok = True
+        except ValueError:
+            self.time_ok = False
+
         self.changeCheck()
         return
 
