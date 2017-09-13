@@ -34,8 +34,10 @@ class Page(HTMLParser):
         # funkcija koja upotpunjava linkove
         # funkcija na pocetak lokalnih linkova koji nemaju scheme i netloc dodaje originalni url (tj. scheme i netlock)
         for nepotpuni_url in self.local_links:
-            if nepotpuni_url.startswith('/') or nepotpuni_url.startswith('#') or nepotpuni_url.startswith('javascript'): # TODO: makni ovaj javascript
+            if nepotpuni_url.startswith('/') or nepotpuni_url.startswith('#'):
                 self.absolute_local_links.append('http://' + self.url + nepotpuni_url)
+            elif nepotpuni_url.startswith('javascript'):
+                self.absolute_local_links.append('http://' + self.url + '/')
             else:
                 self.absolute_local_links.append(nepotpuni_url)
         return self.absolute_local_links
@@ -49,9 +51,16 @@ class Page(HTMLParser):
         if self.page_source is None:
             #TODO: should handle this...
             return []
-        self.feed(self.page_source.read().decode('utf8'))
+        print('......', self.url)
+
+        try:
+            self.feed(self.page_source.read().decode('utf8'))
+        except UnicodeDecodeError:
+            pass # TODO: wtf is going on...?
+
         # print(self.all_links)
         self.local_links = self.same_page_check(self.all_links)
+        self.check_links() # TODO: add this to __init__?
         # funkcija za trazenje linkova, odnosno daljnje granjanje, crawlanje, iteriranje kako god
         # posprema u listu links
         # cim nadje novi link provjerava ima li vec takav cvor, ako ne on odmah radi i novi cvor (za father_id prosljeduje svoj id i tako se kod grana)
