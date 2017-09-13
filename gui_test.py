@@ -1,8 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget,  QLabel,   QLineEdit, QPushButton
-from PyQt5.QtGui import QFont, QColor, QPixmap, QIcon,QPainter,QPen
+from PyQt5.QtGui import QFont, QColor, QPixmap, QIcon, QFontDatabase
 from PyQt5.QtCore import *
-from PyQt5.QtGui import QIcon
 
 
 class App(QWidget):
@@ -15,12 +14,13 @@ class App(QWidget):
         self.height = 475
         self.initUI()
 
-
     def initUI(self):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setFixedSize(self.width,self.height)
 
+        font_db = QFontDatabase()
+        Montserrat = font_db.addApplicationFont("Montserrat-Regular.otf")
 
         #BG IMAGE
         label = QLabel(self)
@@ -30,15 +30,15 @@ class App(QWidget):
 
         #GLAVNI CRAWLEX NATPIS
         self.main_title = QLabel(self)
-        self.main_title.move(305,50)
+        self.main_title.move(300,17)
         self.main_title.setText("Crawlex")
         #font_title = QFont('Serif', 37, QFont.Light)
-        font_title = QFont("Times", 37)
+        font_title = QFont("Montserrat", 37)
         self.main_title.setFont(font_title)
         self.main_title.setStyleSheet("color: white")
 
         #u sto ide URL
-        font_input = QFont('Serif',14,QFont.Light)
+        font_input = QFont("Montserrat",14,QFont.Light)
         self.url_input = QLineEdit(self)
         self.url_input.move(70,210)
         self.url_input.setFont(font_input)
@@ -46,7 +46,7 @@ class App(QWidget):
         self.url_input.setStyleSheet("color: rgba(50,50,50); background-color: rgba(255,255,255,0.5); border: none; ")
 
 
-        info_font = QFont('Serif',14,QFont.Light)
+        info_font = QFont("Montserrat",14,QFont.Light)
         #url label
         self.url_label = QLabel(self)
         self.url_label.move(70, 177)
@@ -59,7 +59,7 @@ class App(QWidget):
         self.paste_btn.move(430,210)
         self.paste_btn.setFont(info_font)
         self.paste_btn.setFixedWidth(100)
-        self.paste_btn.setFixedHeight(25)
+        self.paste_btn.setFixedHeight(31)
         self.paste_btn.setStyleSheet("color: rgba(255,255,255,1); background-color: rgba(255,255,255,0.5); border: none;")
 
         #iteration limit entryBox
@@ -72,7 +72,7 @@ class App(QWidget):
 
         # iteration limit label
         self.maxi_label = QLabel(self)
-        self.maxi_label.move(170, 253)
+        self.maxi_label.move(170, 250)
         self.maxi_label.setText("Max. number of iterations")
         self.maxi_label.setFont(info_font)
         self.maxi_label.setStyleSheet("color: rgba(255,255,255,0.77)")
@@ -82,7 +82,7 @@ class App(QWidget):
         self.itd_btn.move(430,250)
         self.itd_btn.setFont(info_font)
         self.itd_btn.setFixedWidth(100)
-        self.itd_btn.setFixedHeight(25)
+        self.itd_btn.setFixedHeight(30)
         self.itd_btn.setStyleSheet("color: rgba(255,255,255,0.77); background-color:rgba(255,255,255,0.3); border: none; ")
 
         #time limit entryBox
@@ -95,7 +95,7 @@ class App(QWidget):
 
         # time limit label
         self.maxt_label = QLabel(self)
-        self.maxt_label.move(170, 287)
+        self.maxt_label.move(170, 285)
         self.maxt_label.setText("Time limit (miliseconds)")
         self.maxt_label.setFont(info_font)
         self.maxt_label.setStyleSheet("color: rgba(255,255,255,0.77)")
@@ -106,14 +106,14 @@ class App(QWidget):
         self.td_btn.move(430,284)
         self.td_btn.setFont(info_font)
         self.td_btn.setFixedWidth(100)
-        self.td_btn.setFixedHeight(25)
+        self.td_btn.setFixedHeight(30)
         self.td_btn.setStyleSheet("color: rgba(255,255,255,0.77); background-color: rgba(255,255,255,0.3); border: none; ")
 
-        middle_font = QFont('Serif',17,QFont.Light)
+        middle_font = QFont("Montserrat",17,QFont.Light)
 
         #go button
         self.go_btn = QPushButton("Analyze",self)
-        self.go_btn.move(587,250)
+        self.go_btn.move(587,255)
         self.go_btn.setFont(middle_font)
         self.go_btn.setFixedWidth(140)
         self.go_btn.setFixedHeight(59)
@@ -145,21 +145,13 @@ class App(QWidget):
 
         #waiting label
         self.status_label = QLabel(self)
-        self.status_label.move(587, 210)
+        self.status_label.move(577, 210)
         self.status_label.setText("Waiting for input")
         self.status_label.setFont(info_font)
         self.status_label.setStyleSheet("color: rgba(255,255,255,0.5)")
 
         self.show()
 
-    def paintEvet(self,event):
-        #crte
-        crte = QPainter()
-        crte.begin(self)
-        stil_crte = QPen(Qt.white,5,Qt.SolidLine)
-        crte.setPen(stil_crte)
-        crte.drawLine(1,1,500,140)
-        crte.end()
 
 
 
