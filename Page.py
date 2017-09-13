@@ -31,6 +31,7 @@ class Page(HTMLParser):
         self.all_links = []
         self.page_source = None
         self.absolute_local_links = []
+        self.check_links()
 
     def check_links(self):
         #funkcija koja upotpunjava linkove
@@ -74,7 +75,8 @@ class Page(HTMLParser):
         return self.page_source.getcode() == 200
 
     def network_location(self, url):
-        o = urlparse(url, scheme='http')
+        print(url)
+        o = urlparse(url)#, scheme='http')
         o = o.netloc
         return o
 
