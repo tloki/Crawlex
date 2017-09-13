@@ -19,6 +19,9 @@ class App(QWidget):
         self.iteration_ok = True
         self.time_ok = True
 
+        self.MAXT = "1000"
+        self.MAXI = "1000"
+
         self.initUI()
 
 
@@ -81,7 +84,7 @@ class App(QWidget):
         self.maxi_input.setFont(font_input)
         self.maxi_input.setFixedWidth(77)
         self.maxi_input.setStyleSheet("color: rgba(255,255,255,0.77); background-color: rgba(255,255,255,0.3); border: none; ")
-        self.maxi_input.setText("1000")
+        self.maxi_input.setText(self.MAXI)
         self.maxi_input.textChanged[str].connect(self.maxiChange)
 
         # iteration limit label
@@ -98,6 +101,7 @@ class App(QWidget):
         self.itd_btn.setFixedWidth(100)
         self.itd_btn.setFixedHeight(30)
         self.itd_btn.setStyleSheet("color: rgba(255,255,255,0.77); background-color:rgba(255,255,255,0.3); border: none; ")
+        self.itd_btn.clicked.connect(self.itd_btn_click)
 
         #time limit entryBox
         self.maxt_input = QLineEdit(self)
@@ -105,7 +109,7 @@ class App(QWidget):
         self.maxt_input.setFont(font_input)
         self.maxt_input.setFixedWidth(77)
         self.maxt_input.setStyleSheet("color: rgba(255,255,255,0.77); background-color: rgba(255,255,255,0.3); border: none; ")
-        self.maxt_input.setText("1000")
+        self.maxt_input.setText(self.MAXT)
         self.maxt_input.textChanged[str].connect(self.maxtChange)
 
         # time limit label
@@ -123,8 +127,9 @@ class App(QWidget):
         self.td_btn.setFixedWidth(100)
         self.td_btn.setFixedHeight(30)
         self.td_btn.setStyleSheet("color: rgba(255,255,255,0.77); background-color: rgba(255,255,255,0.3); border: none; ")
+        self.td_btn.clicked.connect(self.td_btn_click)
 
-        middle_font = QFont("Montserrat",17,QFont.Light)
+        middle_font = QFont("Montserrat",17)
 
         #go button
         self.go_btn = QPushButton("Analyze",self)
@@ -166,6 +171,15 @@ class App(QWidget):
         self.status_label.setStyleSheet("color: rgba(255,255,255,0.5)")
 
         self.show()
+
+    #funkcije za default gumbe
+    def td_btn_click(self):
+        self.maxt_input.setText(self.MAXT)
+        return
+
+    def itd_btn_click(self):
+        self.maxi_input.setText(self.MAXI)
+        return
 
     #funkcije pri promijeni teksta
     def urlChange(self):
