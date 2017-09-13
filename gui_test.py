@@ -2,22 +2,33 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget,  QLabel,   QLineEdit, QPushButton
 from PyQt5.QtGui import QFont, QColor, QPixmap, QIcon, QFontDatabase
 from PyQt5.QtCore import *
+from Page import *
 
 
 class App(QWidget):
     def __init__(self):
         super().__init__()
-        self.title = 'Crawlex'
+        self.title = ' '
         self.left = 100
         self.top = 100
         self.width = 770
         self.height = 475
+
+        self.url_ok = False
+        self.text_changed = False
+        self.iteration_ok = True
+        self.time_ok = True
+
         self.initUI()
+
 
     def initUI(self):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setFixedSize(self.width,self.height)
+        self.setWindowIcon(QIcon("ikona.png"))
+
+        self.temp_page = Page(0,"-")
 
         font_db = QFontDatabase()
         Montserrat = font_db.addApplicationFont("Montserrat-Regular.otf")
@@ -44,6 +55,8 @@ class App(QWidget):
         self.url_input.setFont(font_input)
         self.url_input.setFixedWidth(350)
         self.url_input.setStyleSheet("color: rgba(50,50,50); background-color: rgba(255,255,255,0.5); border: none; ")
+
+        self.url_input.textChanged[str].connect(self.urlChange)
 
 
         info_font = QFont("Montserrat",14,QFont.Light)
@@ -152,6 +165,24 @@ class App(QWidget):
 
         self.show()
 
+    def urlChange(self):
+        self.temp_string = self.url_input.text()
+        #self.temp_Page.url = self.temp_string
+        print("doso tu")
+        if True: ## temp_Page.check_url():  TO DO !!!
+                self.url_ok = True;
+        else:
+                self.url_ok = False;
+        self.changeCheck()
+        return
+
+
+    def changeCheck(self):
+        if self.url_ok and self.iteration_ok and self.time_ok:
+            self.status_label.setText("Ready to analyze")
+        else:
+            self.status_label.setText("Invalid input...")
+        return
 
 
 
