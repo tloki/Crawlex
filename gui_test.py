@@ -26,6 +26,8 @@ class App(QWidget):
         self.MAXT = "1000"
         self.MAXI = "1000"
 
+        self.analyze = Crawl("www.python.org",self.MAXT,self.MAXI)
+
         self.initUI()
 
 
@@ -234,8 +236,12 @@ class App(QWidget):
     def go_btn_click(self):
         if self.all_ok:
             self.status_label.setText("       Working")
+            self.analyze.start_url = self.url_input.text()
+            self.analyze.max_iter = int(self.maxi_input.text())
+            self.analyze.max_time = int(self.maxt_input.text())
             #self.analyze = Crawl(self.url_input.text(),int(self.maxi_input.text()),int(self.maxt_label.text()))
-            #self.analyze.crawl()
+            self.analyze.crawl()
+            self.status_label.setText("         Done")
         else:
             self.status_label.setText("  Invalid input!!!")
         return
