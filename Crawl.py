@@ -1,7 +1,6 @@
 import Page
 import networkx as nx
 
-
 class Crawl:
     def __init__(self, url_arg, max_iter_arg, max_time_arg):
         self.max_iter = max_iter_arg
@@ -9,13 +8,14 @@ class Crawl:
         self.start_url = url_arg
         self.graph = None
         self.page_array = []
-        #self.home_page = Page.Page(0, url_arg)
-        
+        self.home_page = Page.Page(0, url_arg)
+
     def crawl(self):
-        page_queue = [self.start_url]
+        page_queue = [self.home_page.url]
         visited_pages = set()
-        
+
         while len(page_queue) > 0:
+            print(len(page_queue))
             current_page = page_queue.pop(0)
 
             if current_page not in visited_pages:
@@ -31,7 +31,6 @@ class Crawl:
                         print(new_page)
         print(visited_pages)
 
-
 if __name__ == '__main__':
-    c = Crawl('www.python.org', 10**6, 10**6)
+    c = Crawl('http://www.python.org', 10**6, 10**6)
     c.crawl()

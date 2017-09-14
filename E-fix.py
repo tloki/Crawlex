@@ -1,29 +1,15 @@
-import re
+from re import compile, findall, MULTILINE, IGNORECASE
+import urllib.request
 
+class MailFinder:
+    def __init__(self, source_arg):
+        self.def_source = source_arg
+        self.compile = compile(r'[A-Za-z0-9.#$%&*+\-=?^_{|}~]{1,100}\@[A-Za-z0-9]{1,100}\.[A-Za-z]{1,10}', MULTILINE)
 
+    def mail_finder(self):
+        print(self.compile.findall(self.def_source))
+        return self.compile.findall(self.def_source)
 
-
-
-def mail(x):
-    p = re.compile('[A-Za-z0-9#$%&*+-/=?^_{|}~]{1,100}\@[A-Za-z0-9]{1,100}\.[A-Za-z0-9]{1,10}')
-    a=p.findall(x, re.MULTILINE)
-    print(a)
-
-
-
-
-
-def main(z):
-    ##z = input()
-    mail(z)
-
-
-z =   \
-    '''
-i    .
-    Kontakt adresa za pitanja o upisu na diplomske studije je      diplomski.upisi@fer.hr
-    asdf.gmail@gmail.com apoikl@fer.hr.
-
-     Kandidati koji su se prijavili na ljetnom upisnom roku za u    '''
-print(z)
-main(z)
+if __name__ == '__main__':
+    temp = MailFinder(urllib.request.urlopen(input()).read().decode('utf8'))
+    temp.mail_finder()
