@@ -2,7 +2,9 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget,  QLabel,   QLineEdit, QPushButton
 from PyQt5.QtGui import QFont, QColor, QPixmap, QIcon, QFontDatabase
 from PyQt5.QtCore import *
+from Crawl import *
 from Page import *
+
 
 
 class App(QWidget):
@@ -19,8 +21,12 @@ class App(QWidget):
         self.iteration_ok = True
         self.time_ok = True
 
+        self.all_ok = False
+
         self.MAXT = "1000"
         self.MAXI = "1000"
+
+        self.analyze = Crawl("www.python.org",self.MAXT,self.MAXI)
 
         self.initUI()
 
@@ -77,6 +83,7 @@ class App(QWidget):
         self.paste_btn.setFixedWidth(100)
         self.paste_btn.setFixedHeight(31)
         self.paste_btn.setStyleSheet("color: rgba(255,255,255,1); background-color: rgba(255,255,255,0.5); border: none;")
+        self.paste_btn.clicked.connect(self.paste_btn_click)
 
         #iteration limit entryBox
         self.maxi_input = QLineEdit(self)
@@ -138,6 +145,7 @@ class App(QWidget):
         self.go_btn.setFixedWidth(140)
         self.go_btn.setFixedHeight(59)
         self.go_btn.setStyleSheet("color: rgba(50,50,50); background-color: rgba(255,255,255,0.7); border: none; ")
+        self.go_btn.clicked.connect(self.go_btn_click)
 
         #mail list button
         self.mail_list_btn = QPushButton("Mail list",self)
@@ -172,6 +180,13 @@ class App(QWidget):
 
         self.show()
 
+    #funkcija za paste gumb
+    def paste_btn_click(self):
+        self.clipboard = QApplication.clipboard()
+        if self.clipboard.text() != "":
+            self.url_input.setText(self.clipboard.text())
+        return
+
     #funkcije za default gumbe
     def td_btn_click(self):
         self.maxt_input.setText(self.MAXT)
@@ -184,8 +199,8 @@ class App(QWidget):
     #funkcije pri promijeni teksta
     def urlChange(self):
         self.temp_string = self.url_input.text()
-        #self.temp_Page.url = self.temp_string
-        if True: ## temp_Page.check_url():  TO DO !!!
+        ##self.temp_Page.url = self.temp_string
+        if  True: #self.temp_Page.check_url():
                 self.url_ok = True;
         else:
                 self.url_ok = False;
@@ -220,11 +235,24 @@ class App(QWidget):
     def changeCheck(self):
         if self.url_ok and self.iteration_ok and self.time_ok:
             self.status_label.setText("Ready to analyze")
+            self.all_ok = True
         else:
-            self.status_label.setText("Invalid input...")
+            self.status_label.setText("  Invalid input...")
+            self.all_ok = False
         return
 
-
+    def go_btn_click(self):
+        if self.all_ok:
+            self.status_label.setText("       Working")
+            self.analyze.start_url = self.url_input.text()
+            self.analyze.max_iter = int(self.maxi_input.text())
+            self.analyze.max_time = int(self.maxt_input.text())
+            #self.analyze = Crawl(self.url_input.text(),int(self.maxi_input.text()),int(self.maxt_label.text()))
+            self.analyze.crawl()
+            self.status_label.setText("         Done")
+        else:
+            self.status_label.setText("  Invalid input!!!")
+        return
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
