@@ -1,6 +1,7 @@
 import urllib.request
 from html.parser import HTMLParser
 from urllib.parse import urlparse
+
 # prvotna neka skica klase cvora grafa - odnosno same stranice
 # sva objasnjenja su u komentarima
 
@@ -20,6 +21,7 @@ class Page(HTMLParser):
     def __init__(self, id_arg, url_arg: str):
         super().__init__()
         self.page_id = id_arg
+        self.this_page_url = url_arg
         self.url = url_arg
         self.page_rank = 1.0
         self.emails = []
@@ -28,26 +30,38 @@ class Page(HTMLParser):
         self.all_links = []
         self.page_source = None
         self.absolute_local_links = []
+        self.absolute_all_links = []
+        self.domain_url = self.network_location(self.url)
+        self.skip_crawling = False
         self.check_url()
 
+
     def check_links(self):
+        if  self.skip_crawling :
+            return []
         # funkcija koja upotpunjava linkove
         # funkcija na pocetak lokalnih linkova koji nemaju scheme i netloc dodaje originalni url (tj. scheme i netlock)
-        for nepotpuni_url in self.local_links:
+        for nepotpuni_url in self.all_links:
+            if '#' in nepotpuni_url:
+                nepotpuni_url = nepotpuni_url[0:nepotpuni_url.index('#')]
             if nepotpuni_url.startswith('/') or nepotpuni_url.startswith('#'):
-                self.absolute_local_links.append('http://' + self.url + nepotpuni_url)
+                self.absolute_all_links.append('http://' + self.domain_url + nepotpuni_url)
             elif nepotpuni_url.startswith('javascript'):
-                self.absolute_local_links.append('http://' + self.url + '/')
+                self.absolute_all_links.append('http://' + self.domain_url + '/')
+
             else:
-                self.absolute_local_links.append(nepotpuni_url)
-        return self.absolute_local_links
+                self.absolute_all_links.append(nepotpuni_url)
+        return self.absolute_all_links
 
     def get_mails(self):
+        if  self.skip_crawling :
+            return []
         # funkcija za trazenje mailova... sve sto treba (url i lista koja pohranjuje mailove) vec je u klasi
         return
 
     def get_links(self):
-        self.url = self.network_location(self.url)
+
+        # self.url = self.network_location(self.url)
         if self.page_source is None:
             #TODO: should handle this...
             return []
@@ -58,20 +72,28 @@ class Page(HTMLParser):
         except UnicodeDecodeError:
             pass # TODO: wtf is going on...?
 
+        res = urllib.request.urlopen(self.url)
+        http_message = res.info()
+        if not http_message.get_content_maintype() == 'text':
+            self.skip_crawling = True
+            return []
+
         # print(self.all_links)
-        self.local_links = self.same_page_check(self.all_links)
-        self.check_links() # TODO: add this to __init__?
+        self.absolute_all_links = self.check_links()
+        self.local_links = self.same_page_check(self.absolute_all_links)
+        # TODO: add this to __init__?
         # funkcija za trazenje linkova, odnosno daljnje granjanje, crawlanje, iteriranje kako god
         # posprema u listu links
         # cim nadje novi link provjerava ima li vec takav cvor, ako ne on odmah radi i novi cvor (za father_id prosljeduje svoj id i tako se kod grana)
-        return self.absolute_local_links
+        return self.local_links
 
     def __repr__(self):
         return self.url
 
     def check_url(self):
+
+
         url = self.url
-        original_url = url
 
         if not url.startswith('http'):
             url = 'http://' + url
@@ -98,12 +120,12 @@ class Page(HTMLParser):
         return o
 
     def comparison(self, url):
-        if self.network_location(self.url) == self.network_location(url):
+        if self.domain_url == self.network_location(url):
             return True
         return False
 
-    def same_page_check(self, all_links):
-        for url in all_links:
+    def same_page_check(self, absolute_all_links):
+        for url in absolute_all_links:
             if self.comparison(url):
                 self.local_links.append(url)
         return self.local_links
