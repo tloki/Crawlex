@@ -83,6 +83,7 @@ class App(QWidget):
         self.paste_btn.setFixedWidth(100)
         self.paste_btn.setFixedHeight(31)
         self.paste_btn.setStyleSheet("color: rgba(255,255,255,1); background-color: rgba(255,255,255,0.5); border: none;")
+        self.paste_btn.clicked.connect(self.paste_btn_click)
 
         #iteration limit entryBox
         self.maxi_input = QLineEdit(self)
@@ -178,6 +179,13 @@ class App(QWidget):
         self.status_label.setStyleSheet("color: rgba(255,255,255,0.5)")
 
         self.show()
+
+    #funkcija za paste gumb
+    def paste_btn_click(self):
+        self.clipboard = QApplication.clipboard()
+        if self.clipboard.text() != "":
+            self.url_input.setText(self.clipboard.text())
+        return
 
     #funkcije za default gumbe
     def td_btn_click(self):
