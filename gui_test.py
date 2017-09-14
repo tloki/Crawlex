@@ -2,7 +2,9 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget,  QLabel,   QLineEdit, QPushButton
 from PyQt5.QtGui import QFont, QColor, QPixmap, QIcon, QFontDatabase
 from PyQt5.QtCore import *
+from Crawl import *
 from Page import *
+
 
 
 class App(QWidget):
@@ -18,6 +20,8 @@ class App(QWidget):
         self.text_changed = False
         self.iteration_ok = True
         self.time_ok = True
+
+        self.all_ok = False
 
         self.MAXT = "1000"
         self.MAXI = "1000"
@@ -138,6 +142,7 @@ class App(QWidget):
         self.go_btn.setFixedWidth(140)
         self.go_btn.setFixedHeight(59)
         self.go_btn.setStyleSheet("color: rgba(50,50,50); background-color: rgba(255,255,255,0.7); border: none; ")
+        self.go_btn.clicked.connect(self.go_btn_click)
 
         #mail list button
         self.mail_list_btn = QPushButton("Mail list",self)
@@ -184,8 +189,8 @@ class App(QWidget):
     #funkcije pri promijeni teksta
     def urlChange(self):
         self.temp_string = self.url_input.text()
-        #self.temp_Page.url = self.temp_string
-        if True: ## temp_Page.check_url():  TO DO !!!
+        ##self.temp_Page.url = self.temp_string
+        if  True: #self.temp_Page.check_url():
                 self.url_ok = True;
         else:
                 self.url_ok = False;
@@ -220,11 +225,20 @@ class App(QWidget):
     def changeCheck(self):
         if self.url_ok and self.iteration_ok and self.time_ok:
             self.status_label.setText("Ready to analyze")
+            self.all_ok = True
         else:
-            self.status_label.setText("Invalid input...")
+            self.status_label.setText("  Invalid input...")
+            self.all_ok = False
         return
 
-
+    def go_btn_click(self):
+        if self.all_ok:
+            self.status_label.setText("       Working")
+            #self.analyze = Crawl(self.url_input.text(),int(self.maxi_input.text()),int(self.maxt_label.text()))
+            #self.analyze.crawl()
+        else:
+            self.status_label.setText("  Invalid input!!!")
+        return
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
