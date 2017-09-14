@@ -3,8 +3,7 @@ from PyQt5.QtWidgets import QApplication, QWidget,  QLabel,   QLineEdit, QPushBu
 from PyQt5.QtGui import QFont, QColor, QPixmap, QIcon, QFontDatabase
 from PyQt5.QtCore import *
 from Crawl import *
-from Page import *
-
+import re
 
 
 class App(QWidget):
@@ -23,6 +22,8 @@ class App(QWidget):
 
         self.all_ok = False
 
+        #self.parsed_url = ""
+
         self.MAXT = "1000"
         self.MAXI = "1000"
 
@@ -37,7 +38,7 @@ class App(QWidget):
         self.setFixedSize(self.width,self.height)
         self.setWindowIcon(QIcon("ikona.png"))
 
-        self.temp_page = Page(0,"-")
+
 
         font_db = QFontDatabase()
         Montserrat = font_db.addApplicationFont("Montserrat-Regular.otf")
@@ -199,9 +200,21 @@ class App(QWidget):
     #funkcije pri promijeni teksta
     def urlChange(self):
         self.temp_string = self.url_input.text()
-        ##self.temp_Page.url = self.temp_string
-        if  True: #self.temp_Page.check_url():
+
+        if not self.temp_string.startswith('http'):
+            self.temp_string = 'http://' + self.temp_string
+
+        self.regex = re.compile(
+            r'^(?:http|ftp)s?://'  # http:// or https://
+            r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'  # domain...
+            r'localhost|'  # localhost...
+            r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or ip
+            r'(?::\d+)?'  # optional port
+            r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+
+        if  bool(self.regex.match(self.temp_string)):
                 self.url_ok = True;
+
         else:
                 self.url_ok = False;
         self.changeCheck()
