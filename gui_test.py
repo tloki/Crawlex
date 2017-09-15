@@ -19,6 +19,7 @@ class App(QWidget):
         self.text_changed = False
         self.iteration_ok = True
         self.time_ok = True
+        self.depth_ok = True
 
         self.all_ok = False
 
@@ -26,6 +27,7 @@ class App(QWidget):
 
         self.MAXT = "1000"
         self.MAXI = "1000"
+        self.MAXD = "10"
 
         self.analyze = Crawl("www.python.org",self.MAXT,self.MAXI)
 
@@ -137,6 +139,32 @@ class App(QWidget):
         self.td_btn.setStyleSheet("color: rgba(255,255,255,0.77); background-color: rgba(255,255,255,0.3); border: none; ")
         self.td_btn.clicked.connect(self.td_btn_click)
 
+        #depth limit entry box
+        self.maxd_input = QLineEdit(self)
+        self.maxd_input.move(70, 318)
+        self.maxd_input.setFont(font_input)
+        self.maxd_input.setFixedWidth(77)
+        self.maxd_input.setStyleSheet(
+            "color: rgba(255,255,255,0.77); background-color: rgba(255,255,255,0.3); border: none; ")
+        self.maxd_input.setText(self.MAXD)
+        self.maxd_input.textChanged[str].connect(self.maxdChange)
+
+        #depth limit label
+        self.maxd_label = QLabel(self)
+        self.maxd_label.move(170, 319)
+        self.maxd_label.setText("Depth iteration limit")
+        self.maxd_label.setFont(info_font)
+        self.maxd_label.setStyleSheet("color: rgba(255,255,255,0.77)")
+
+        #depth default button
+        self.dd_btn = QPushButton("Default",self)
+        self.dd_btn.move(430,318)
+        self.dd_btn.setFont(info_font)
+        self.dd_btn.setFixedWidth(100)
+        self.dd_btn.setFixedHeight(30)
+        self.dd_btn.setStyleSheet("color: rgba(255,255,255,0.77); background-color: rgba(255,255,255,0.3); border: none; ")
+        self.dd_btn.clicked.connect(self.dd_btn_click)
+
         middle_font = QFont("Montserrat",17)
 
         #go button
@@ -197,6 +225,10 @@ class App(QWidget):
         self.maxi_input.setText(self.MAXI)
         return
 
+    def dd_btn_click(self):
+        self.maxd_input.setText(self.MAXD)
+        return
+
     #funkcije pri promijeni teksta
     def urlChange(self):
         self.temp_string = self.url_input.text()
@@ -244,9 +276,20 @@ class App(QWidget):
         self.changeCheck()
         return
 
+    def maxdChange(self):
+        self.temp_string = self.maxd_input.text()
+
+        try:
+            int(self.temp_string)
+            self.depth_ok = True
+        except ValueError:
+            self.depth_ok = False
+
+        self.changeCheck()
+        return
 
     def changeCheck(self):
-        if self.url_ok and self.iteration_ok and self.time_ok:
+        if self.url_ok and self.iteration_ok and self.time_ok and self.depth_ok:
             self.status_label.setText("Ready to analyze")
             self.all_ok = True
         else:
