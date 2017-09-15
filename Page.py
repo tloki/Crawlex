@@ -131,6 +131,8 @@ class Page(HTMLParser):
 
         self.url = url
 
+        self.domain_url = self.network_location(self.url)
+
         return True
 
     def network_location(self, url):
