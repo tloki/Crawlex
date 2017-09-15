@@ -104,7 +104,10 @@ class Page(HTMLParser):
         if not url.startswith('http'):
             url = 'http://' + url
 
-        response = head(url)
+        try:
+            response = head(url)
+        except:
+            return False
         
         if response.status_code == 301:
             url = url.replace('http://', 'https://')
@@ -118,7 +121,7 @@ class Page(HTMLParser):
             try:
                 self.page_source = urllib.request.urlopen(url)
 
-            except (URLError, InvalidURL) as e:
+            except (URLError, InvalidURL, ConnectionResetError) as e:
                 return False
 
         else:
