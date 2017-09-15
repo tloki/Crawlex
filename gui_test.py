@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget,  QLabel,   QLineEdit, QPushButton, QMessageBox
+from PyQt5.QtWidgets import QApplication, QWidget,  QLabel,   QLineEdit, QPushButton, QMessageBox,QPlainTextEdit
 from PyQt5.QtGui import QFont, QColor, QPixmap, QIcon, QFontDatabase
 from PyQt5.QtCore import *
 from Crawl import *
@@ -13,6 +13,9 @@ class App(QWidget):
         self.top = 100
         self.width = 770
         self.height = 475
+
+        self.alternate = [(770,475,"v"),(770,730,"^")]
+        self.alternate_bool = False
 
         self.url_ok = False
         self.text_changed = False
@@ -151,8 +154,7 @@ class App(QWidget):
         self.maxd_input.move(70, 318)
         self.maxd_input.setFont(font_input)
         self.maxd_input.setFixedWidth(77)
-        self.maxd_input.setStyleSheet(
-            "color: rgba(255,255,255,0.77); background-color: rgba(255,255,255,0.3); border: none; ")
+        self.maxd_input.setStyleSheet("color: rgba(255,255,255,0.77); background-color: rgba(255,255,255,0.3); border: none; ")
         self.maxd_input.setText(self.MAXD)
         self.maxd_input.textChanged[str].connect(self.maxdChange)
 
@@ -224,7 +226,49 @@ class App(QWidget):
         self.about_btn.setStyleSheet("background-color:rgba(255,255,255,0.5); border:none; color: rgba(50,50,50,0.7)")
         self.about_btn.clicked.connect(self.about_btn_click)
 
+        #expand gumb
+        self.expand_btn = QPushButton("v", self)
+        self.expand_btn.move(0, 455)
+        self.expand_btn.setFixedSize(20, 20)
+        self.expand_btn.setFont(about_font)
+        self.expand_btn.setStyleSheet("background-color:rgba(255,255,255,0.5); border:none; color: rgba(50,50,50,0.7)")
+        self.expand_btn.clicked.connect(self.expand_click)
+
+        #expanded textbox
+        self.maxd_label = QLabel(self)
+        self.maxd_label.move(170, 319)
+        self.maxd_label.setText("Depth iteration limit")
+        self.maxd_label.setFont(info_font)
+        self.maxd_label.setStyleSheet("color: rgba(255,255,255,0.77)")
+
+        #text box
+        console_font = QFont("Courier", 12)
+        self.text_box = QPlainTextEdit(self)
+        self.text_box.move(0, 475)
+        self.text_box.setFont(console_font)
+        self.text_box.setFixedWidth(770)
+        self.text_box.setFixedHeight(275)
+        self.text_box.setStyleSheet("color: rgba(255,255,255,0.77); background-color: rgba(0,0,0,1); border: none; border-top: 3px solid white;")
+        self.text_box.insertPlainText("console waiting for output...")
+        self.text_box.setDisabled(True)
+
+
         self.show()
+
+    #expand funkcija
+    def expand_click(self):
+
+        self.alternate_bool = not self.alternate_bool
+
+        temp_switch = int(self.alternate_bool)
+
+        temp_width = self.alternate[temp_switch][0]
+        temp_height = self.alternate[temp_switch][1]
+
+        self.expand_btn.setText(self.alternate[temp_switch][2])
+
+        self.setFixedSize(temp_width, temp_height)
+        return
 
     #funkcija za paste gumb
     def paste_btn_click(self):
