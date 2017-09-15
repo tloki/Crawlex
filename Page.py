@@ -38,6 +38,8 @@ class Page(HTMLParser):
         self.domain_url = self.network_location(self.url)
         self.skip_crawling = False
         self.skip_crawling = not self.check_url()
+        if not self.skip_crawling:
+            self.a = MailFinder(self.source_decoded)
 
     def check_links(self):
         if  self.skip_crawling:
@@ -57,10 +59,10 @@ class Page(HTMLParser):
 
     def get_mails(self):
         if  self.skip_crawling:
-            return []
-        a = MailFinder(self.source_decoded)
-        self.emails = a.mail_finder()
+            return set()
+        self.emails = self.a.mail_finder()
         # funkcija za trazenje mailova... sve sto treba (url i lista koja pohranjuje mailove) vec je u klasi
+        print(self.emails)
         return self.emails
 
     def get_links(self):
@@ -121,6 +123,8 @@ class Page(HTMLParser):
             except (URLError, InvalidURL) as e:
                 # page not found, probably 404
                 return False
+        else:
+            return False
 
         try:
             print('2:', type(self.page_source))
