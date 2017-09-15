@@ -55,17 +55,17 @@ class App(QWidget):
 
     def input_handler(self,Q_arg:multiprocessing.Queue):
         while True:
-            # temp_var = Q_arg.get(True)
-            # time.sleep(0.3)
-            #
-            # dump_list = str(temp_var) + "\n"
-            # for i in range(Q_arg.qsize()):
-            #     try:
-            #         dump_list += Q_arg.get(True) + "\n"
-            #     except:
-            #         break
-            #
-            # self.console_print(dump_list)
+            temp_var = Q_arg.get(True)
+            time.sleep(0.3)
+
+            dump_list = str(temp_var) + "\n"
+            for i in range(Q_arg.qsize()):
+                try:
+                    dump_list += Q_arg.get(True) + "\n"
+                except:
+                    break
+
+            self.console_print(dump_list)
             pass
 
 
@@ -276,7 +276,7 @@ class App(QWidget):
         self.text_box.setFixedHeight(275)
         self.text_box.setStyleSheet("color: rgba(255,255,255,0.77); background-color: rgba(0,0,0,1); border: none; border-top: 3px solid white;")
         self.text_box.insertPlainText("console waiting for output...")
-        self.text_box.setReadOnly(True)
+        # self.text_box.setReadOnly(True)
 
 
 
@@ -338,10 +338,10 @@ class App(QWidget):
             r'(?:/?|[/?]\S+)$', re.IGNORECASE)
 
         if  bool(self.regex.match(self.temp_string)):
-                self.url_ok = True;
+                self.url_ok = True
 
         else:
-                self.url_ok = False;
+                self.url_ok = False
         self.changeCheck()
         return
 
@@ -390,7 +390,6 @@ class App(QWidget):
             self.all_ok = False
         return
 
-
     def go_btn_click(self):
         if self.all_ok:
             self.status_label.setText("       Working")
@@ -412,8 +411,10 @@ class App(QWidget):
         return
 
     def console_print(self, text_arg):
+        self.text_box.setReadOnly(False)
         self.text_box.insertPlainText("\n"+str(text_arg))
-        self.text_box.moveCursor(QTextCursor.End)
+        self.text_box.setReadOnly(True)
+        # self.text_box.moveCursor(QTextCursor.End)
         return
 
 if __name__ == '__main__':
