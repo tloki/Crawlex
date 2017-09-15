@@ -32,6 +32,7 @@ class Crawl:
                         found_pages |= {local_url}                         
                         print(local_url)
         print(visited_pages)
+        return visited_pages
 
 if __name__ == '__main__':
     c = Crawl('http://icm.hr', 10**6, 10**6)
