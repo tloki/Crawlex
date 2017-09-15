@@ -13,6 +13,7 @@ class Crawl:
     def crawl(self):
         page_queue = [self.start_url]
         visited_pages = set()
+        found_pages = set()
 
         while len(page_queue) > 0:
             print(len(page_queue))
@@ -25,12 +26,13 @@ class Crawl:
                 local_links = p.get_links()
 
                 for local_url in local_links:
-                    if local_url not in visited_pages:
-                        new_page = Page.Page(0, local_url).url
-                        page_queue.append(new_page)
-                        print(new_page)
+                    if local_url not in visited_pages and local_url not in found_pages:
+                        #new_page = Page.Page(0, local_url).url
+                        page_queue.append(local_url)
+                        found_pages |= {local_url}                         
+                        print(local_url)
         print(visited_pages)
 
 if __name__ == '__main__':
-    c = Crawl('http://www.python.org', 10**6, 10**6)
+    c = Crawl('http://icm.hr', 10**6, 10**6)
     c.crawl()
