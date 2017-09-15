@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget,  QLabel,   QLineEdit, QPushButton, QMessageBox,QPlainTextEdit
-from PyQt5.QtGui import QFont, QColor, QPixmap, QIcon, QFontDatabase
+from PyQt5.QtGui import QFont, QColor, QPixmap, QIcon, QFontDatabase,QTextCursor
 from PyQt5.QtCore import *
 from Crawl import *
 import re, multiprocessing
@@ -250,7 +250,8 @@ class App(QWidget):
         self.text_box.setFixedHeight(275)
         self.text_box.setStyleSheet("color: rgba(255,255,255,0.77); background-color: rgba(0,0,0,1); border: none; border-top: 3px solid white;")
         self.text_box.insertPlainText("console waiting for output...")
-        self.text_box.setDisabled(True)
+        self.text_box.setReadOnly(True)
+
 
 
         self.show()
@@ -268,6 +269,7 @@ class App(QWidget):
         self.expand_btn.setText(self.alternate[temp_switch][2])
 
         self.setFixedSize(temp_width, temp_height)
+        #self.console_print("dodao tekst")
         return
 
     #funkcija za paste gumb
@@ -383,6 +385,10 @@ class App(QWidget):
             self.status_label.setText("  Invalid input!!!")
         return
 
+    def console_print(self, text_arg):
+        self.text_box.insertPlainText("\n"+text_arg)
+        self.text_box.moveCursor(QTextCursor.End)
+        return
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
