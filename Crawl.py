@@ -8,10 +8,10 @@ class Crawl:
         self.start_url = url_arg
         self.graph = None
         self.page_array = []
-        self.home_page = Page.Page(0, url_arg)
+        #self.home_page = Page.Page(0, url_arg)
 
     def crawl(self):
-        page_queue = [self.home_page.url]
+        page_queue = [self.start_url]
         visited_pages = set()
 
         while len(page_queue) > 0:
