@@ -61,8 +61,7 @@ class Page(HTMLParser):
         if  self.skip_crawling:
             return set()
         self.emails = self.a.mail_finder()
-        # funkcija za trazenje mailova... sve sto treba (url i lista koja pohranjuje mailove) vec je u klasi
-        print(self.emails)
+
         return self.emails
 
     def get_links(self):

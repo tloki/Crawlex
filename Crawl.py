@@ -32,6 +32,7 @@ class Crawl:
                         found_pages |= {local_url}
                         print(local_url)
                         print(found_mails)
+                        
         print(visited_pages)
         return visited_pages
 
