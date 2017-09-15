@@ -3,8 +3,7 @@ from PyQt5.QtWidgets import QApplication, QWidget,  QLabel,   QLineEdit, QPushBu
 from PyQt5.QtGui import QFont, QColor, QPixmap, QIcon, QFontDatabase
 from PyQt5.QtCore import *
 from Crawl import *
-import re
-
+import re, multiprocessing
 
 class App(QWidget):
     def __init__(self):
@@ -21,6 +20,8 @@ class App(QWidget):
         self.time_ok = True
         self.depth_ok = True
 
+        #self.mythreadpool = QThreadPool()
+
         self.all_ok = False
 
         #self.parsed_url = ""
@@ -30,9 +31,15 @@ class App(QWidget):
         self.MAXD = "10"
 
         self.analyze = Crawl("www.python.org",self.MAXT,self.MAXI)
+        self.t = multiprocessing.Process(target=self.do_nothing)
+        self.t.run()
+
 
         self.initUI()
 
+
+    def do_nothing(self):
+        return
 
     def initUI(self):
         self.setWindowTitle(self.title)
@@ -240,7 +247,7 @@ class App(QWidget):
         return
 
     def about_btn_click(self):
-        QMessageBox.about(self, "About Crawlex", "\nWeb crawling application developed for ICM Summer of Code 2017 \n\n\n >Students:\n Abramović Hrvoje\n Krišto Zvonimir\n Štracak Jakov\n Tišljar Antun\n\n >Supervisor:\n Tomislav Lokotar\n\n\nZagreb, 2017.")
+        QMessageBox.about(self, "About Crawlex", "\nWeb crawling application developed for ICM Summer of Code 2017 \n\n\n >Students:\n Abramović Hrvoje\n Krišto Zvonimir\n Tišljar Antun\n Štracak Jakov\n\n >Supervisor:\n Tomislav Lokotar\n\n\nZagreb, 2017.")
         return
 
     #funkcije pri promijeni teksta
@@ -311,6 +318,7 @@ class App(QWidget):
             self.all_ok = False
         return
 
+
     def go_btn_click(self):
         if self.all_ok:
             self.status_label.setText("       Working")
@@ -319,7 +327,13 @@ class App(QWidget):
             #self.analyze.max_iter = int(self.maxi_input.text())
             #self.analyze.max_time = int(self.maxt_input.text())
             #self.analyze = Crawl(self.url_input.text(),int(self.maxi_input.text()),int(self.maxt_label.text()))
-            self.analyze.crawl()
+            #self.mythreadpool.start(self.analyze)
+            if self.t.is_alive():
+                self.t.terminate()
+            self.t = multiprocessing.Process(target=self.analyze.crawl)
+            #threads.append(self.t)
+            self.t.start()
+            #self.analyze.crawl()
             self.status_label.setText("         Done")
         else:
             self.status_label.setText("  Invalid input!!!")
