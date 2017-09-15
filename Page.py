@@ -43,7 +43,7 @@ class Page(HTMLParser):
             self.mail_prime = MailFinder(self.source_decoded)
 
     def check_links(self):
-        if  self.skip_crawling:
+        if self.skip_crawling:
             return []
         # funkcija koja upotpunjava linkove
         # funkcija na pocetak lokalnih linkova koji nemaju scheme i netloc dodaje originalni url (tj. scheme i netlock)
