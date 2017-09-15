@@ -30,9 +30,9 @@ class Crawl:
                     if local_url not in visited_pages and local_url not in found_pages:
                         page_queue.append(local_url)
                         found_pages |= {local_url}
-                        #print(local_url)
-                        #print(found_mails)
-        #print(visited_pages)
+                        print(local_url)
+                        print(found_mails)
+        print(visited_pages)
         return visited_pages
 
 if __name__ == '__main__':
