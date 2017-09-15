@@ -1,6 +1,10 @@
 import urllib.request
 from html.parser import HTMLParser
 from urllib.parse import urlparse
+from requests import Session, head
+from urllib.error import URLError
+from http.client import InvalidURL
+from MailFinder import MailFinder
 
 # prvotna neka skica klase cvora grafa - odnosno same stranice
 # sva objasnjenja su u komentarima
@@ -33,11 +37,10 @@ class Page(HTMLParser):
         self.absolute_all_links = []
         self.domain_url = self.network_location(self.url)
         self.skip_crawling = False
-        self.check_url()
-
+        self.skip_crawling = not self.check_url()
 
     def check_links(self):
-        if  self.skip_crawling :
+        if  self.skip_crawling:
             return []
         # funkcija koja upotpunjava linkove
         # funkcija na pocetak lokalnih linkova koji nemaju scheme i netloc dodaje originalni url (tj. scheme i netlock)
@@ -48,32 +51,34 @@ class Page(HTMLParser):
                 self.absolute_all_links.append('http://' + self.domain_url + nepotpuni_url)
             elif nepotpuni_url.startswith('javascript'):
                 self.absolute_all_links.append('http://' + self.domain_url + '/')
-
             else:
                 self.absolute_all_links.append(nepotpuni_url)
         return self.absolute_all_links
 
     def get_mails(self):
-        if  self.skip_crawling :
+        if  self.skip_crawling:
             return []
+        a = MailFinder(self.source_decoded)
+        self.emails = a.mail_finder()
         # funkcija za trazenje mailova... sve sto treba (url i lista koja pohranjuje mailove) vec je u klasi
-        return
+        return self.emails
 
     def get_links(self):
-
+        #print('......', self.url, end=' ')
+        if  self.skip_crawling:
+            return []
         # self.url = self.network_location(self.url)
         if self.page_source is None:
             #TODO: should handle this...
             return []
-        print('......', self.url)
+        
+        
 
-        try:
-            self.feed(self.page_source.read().decode('utf8'))
-        except UnicodeDecodeError:
-            pass # TODO: wtf is going on...?
-
-        res = urllib.request.urlopen(self.url)
+        res = self.page_source
         http_message = res.info()
+
+        #print('type="' + http_message.get_content_maintype() + '"')
+        
         if not http_message.get_content_maintype() == 'text':
             self.skip_crawling = True
             return []
@@ -92,26 +97,42 @@ class Page(HTMLParser):
 
     def check_url(self):
 
-
         url = self.url
-
+        
         if not url.startswith('http'):
             url = 'http://' + url
 
-        from urllib.error import URLError
-        from http.client import InvalidURL
-        try:
-            self.page_source = urllib.request.urlopen(url)
-        except (URLError, InvalidURL) as e:
-            # page not found, probably 404
-            return False
+        response = head(url)
 
-        if self.page_source.getcode() == 301:
+        if response.status_code == 301:
             url = url.replace('http://', 'https://')
-            self.page_source = urllib.request.urlopen(url)
+            response = head(url)
+
+        if response.status_code == 200:
+            contentType = response.headers['content-type']
+            if not contentType.startswith('text'):
+                self.skip_crawlng = True
+                return False
+            try:
+                self.page_source = urllib.request.urlopen(url)
+                #self.page_source.read()
+                print('1:', type(self.page_source))
+                print('pimpek', self.page_source)
+            except (URLError, InvalidURL) as e:
+                # page not found, probably 404
+                return False
+
+        try:
+            print('2:', type(self.page_source))
+            self.source_decoded = self.page_source.read().decode('utf8')
+            self.feed(self.source_decoded)
+        except UnicodeDecodeError:
+            print('error') # TODO: wtf is going on...?
+            pass
 
         self.url = url
-        return self.page_source.getcode() == 200
+
+        return True
 
     def network_location(self, url):
         # print(url)
