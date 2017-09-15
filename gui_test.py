@@ -39,7 +39,7 @@ class App(QWidget):
         self.MAXI = "1000"
         self.MAXD = "10"
 
-        self.analyze = Crawl("www.python.org",self.MAXT,self.MAXI,self.console_print)
+        self.analyze = Crawl("www.python.org",self.MAXT,self.MAXI,self.MAXD,self.console_print)
         self.t = multiprocessing.Process(target=self.do_nothing)
         self.t.run()
 
@@ -393,7 +393,7 @@ class App(QWidget):
     def go_btn_click(self):
         if self.all_ok:
             self.status_label.setText("       Working")
-            self.analyze = Crawl(self.url_input.text(), int(self.maxi_input.text()), int(self.maxt_input.text()),queue=self.printQ)
+            self.analyze = Crawl(self.url_input.text(), int(self.maxi_input.text()), int(self.maxt_input.text()),int(self.maxd_input.text()),queue=self.printQ)
             #self.analyze.start_url = self.url_input.text()
             #self.analyze.max_iter = int(self.maxi_input.text())
             #self.analyze.max_time = int(self.maxt_input.text())
@@ -406,6 +406,7 @@ class App(QWidget):
             self.t.start()
             #self.analyze.crawl()
             self.status_label.setText("         Done")
+            self.text_box.clear()
         else:
             self.status_label.setText("  Invalid input!!!")
         return

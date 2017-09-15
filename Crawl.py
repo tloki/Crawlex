@@ -6,16 +6,19 @@ from multiprocessing import Queue
 import warnings
 warnings.filterwarnings("ignore")
 
+
 class Crawl:
-    def __init__(self, url_arg, max_iter_arg, max_time_arg, queue=Queue()):
+    def __init__(self, url_arg, max_iter_arg, max_time_arg, max_depth_arg, queue=Queue()):
         self.max_iter = max_iter_arg
         self.max_time = max_time_arg
+        self.max_depth = max_depth_arg
         self.start_url = url_arg
         self.graph = None
         self.page_array = []
         self.q = queue
         self.graph = nx.DiGraph()
-        #self.home_page = Page.Page(0, url_arg)
+
+        # self.home_page = Page.Page(0, url_arg)
 
     def print(self, item):
         print(item)
