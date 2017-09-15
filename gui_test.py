@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget,  QLabel,   QLineEdit, QPushButton
+from PyQt5.QtWidgets import QApplication, QWidget,  QLabel,   QLineEdit, QPushButton, QMessageBox
 from PyQt5.QtGui import QFont, QColor, QPixmap, QIcon, QFontDatabase
 from PyQt5.QtCore import *
 from Crawl import *
@@ -207,6 +207,16 @@ class App(QWidget):
         self.status_label.setFont(info_font)
         self.status_label.setStyleSheet("color: rgba(255,255,255,0.5)")
 
+
+        about_font = QFont("Sans-Serif",14)
+        #about gumb
+        self.about_btn = QPushButton("i",self)
+        self.about_btn.move(750,455)
+        self.about_btn.setFixedSize(20,20)
+        self.about_btn.setFont(about_font)
+        self.about_btn.setStyleSheet("background-color:rgba(255,255,255,0.5); border:none; color: rgba(50,50,50,0.7)")
+        self.about_btn.clicked.connect(self.about_btn_click)
+
         self.show()
 
     #funkcija za paste gumb
@@ -227,6 +237,10 @@ class App(QWidget):
 
     def dd_btn_click(self):
         self.maxd_input.setText(self.MAXD)
+        return
+
+    def about_btn_click(self):
+        QMessageBox.about(self, "About Crawlex", "\nWeb crawling application developed for ICM Summer of Code 2017 \n\n\n >Students:\n Abramović Hrvoje\n Krišto Zvonimir\n Štracak Jakov\n Tišljar Antun\n\n >Supervisor:\n Tomislav Lokotar\n\n\nZagreb, 2017.")
         return
 
     #funkcije pri promijeni teksta
@@ -310,6 +324,7 @@ class App(QWidget):
         else:
             self.status_label.setText("  Invalid input!!!")
         return
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
