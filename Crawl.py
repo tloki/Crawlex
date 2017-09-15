@@ -3,6 +3,9 @@ import networkx as nx
 import matplotlib.pyplot as plt
 from multiprocessing import Queue
 
+import warnings
+warnings.filterwarnings("ignore")
+
 class Crawl:
     def __init__(self, url_arg, max_iter_arg, max_time_arg, queue=Queue()):
         self.max_iter = max_iter_arg
@@ -50,6 +53,5 @@ class Crawl:
 if __name__ == '__main__':
     c = Crawl('icm.hr', 10**6, 10**6)
     r = c.crawl()
-    c.prnt_func(len(r))
     nx.draw_random(c.graph)
     plt.show()

@@ -1,9 +1,11 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget,  QLabel,   QLineEdit, QPushButton, QMessageBox,QPlainTextEdit
-from PyQt5.QtGui import QFont, QColor, QPixmap, QIcon, QFontDatabase,QTextCursor
+from PyQt5.QtWidgets import QApplication, QWidget,  QLabel,   QLineEdit, QPushButton, QMessageBox, QPlainTextEdit
+from PyQt5.QtGui import QFont, QColor, QPixmap, QIcon, QFontDatabase, QTextCursor
 from PyQt5.QtCore import *
 from Crawl import *
-import re, multiprocessing
+import re, multiprocessing, threading,time
+
+
 
 class App(QWidget):
     def __init__(self):
@@ -23,6 +25,10 @@ class App(QWidget):
         self.time_ok = True
         self.depth_ok = True
 
+        self.printQ = multiprocessing.Queue()
+        self.my_thread = threading.Thread(target=self.input_handler, args=(self.printQ,))
+
+
         #self.mythreadpool = QThreadPool()
 
         self.all_ok = False
@@ -33,16 +39,36 @@ class App(QWidget):
         self.MAXI = "1000"
         self.MAXD = "10"
 
-        self.analyze = Crawl("www.python.org",self.MAXT,self.MAXI)
+        self.analyze = Crawl("www.python.org",self.MAXT,self.MAXI,self.console_print)
         self.t = multiprocessing.Process(target=self.do_nothing)
         self.t.run()
 
 
+
         self.initUI()
+
+        self.my_thread.start()
 
 
     def do_nothing(self):
         return
+
+    def input_handler(self,Q_arg:multiprocessing.Queue):
+        while True:
+            # temp_var = Q_arg.get(True)
+            # time.sleep(0.3)
+            #
+            # dump_list = str(temp_var) + "\n"
+            # for i in range(Q_arg.qsize()):
+            #     try:
+            #         dump_list += Q_arg.get(True) + "\n"
+            #     except:
+            #         break
+            #
+            # self.console_print(dump_list)
+            pass
+
+
 
     def initUI(self):
         self.setWindowTitle(self.title)
@@ -368,7 +394,7 @@ class App(QWidget):
     def go_btn_click(self):
         if self.all_ok:
             self.status_label.setText("       Working")
-            self.analyze = Crawl( self.url_input.text(),int(self.maxi_input.text()), int(self.maxt_input.text()))
+            self.analyze = Crawl(self.url_input.text(), int(self.maxi_input.text()), int(self.maxt_input.text()),queue=self.printQ)
             #self.analyze.start_url = self.url_input.text()
             #self.analyze.max_iter = int(self.maxi_input.text())
             #self.analyze.max_time = int(self.maxt_input.text())
@@ -386,7 +412,7 @@ class App(QWidget):
         return
 
     def console_print(self, text_arg):
-        self.text_box.insertPlainText("\n"+text_arg)
+        self.text_box.insertPlainText("\n"+str(text_arg))
         self.text_box.moveCursor(QTextCursor.End)
         return
 
