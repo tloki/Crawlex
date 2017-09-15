@@ -5,6 +5,7 @@ from requests import Session, head
 from urllib.error import URLError
 from http.client import InvalidURL
 from MailFinder import MailFinder
+import time
 
 # prvotna neka skica klase cvora grafa - odnosno same stranice
 # sva objasnjenja su u komentarima
@@ -39,7 +40,7 @@ class Page(HTMLParser):
         self.skip_crawling = False
         self.skip_crawling = not self.check_url()
         if not self.skip_crawling:
-            self.a = MailFinder(self.source_decoded)
+            self.mail_prime = MailFinder(self.source_decoded)
 
     def check_links(self):
         if  self.skip_crawling:
@@ -60,7 +61,7 @@ class Page(HTMLParser):
     def get_mails(self):
         if  self.skip_crawling:
             return set()
-        self.emails = self.a.mail_finder()
+        self.emails = self.mail_prime.mail_finder()
 
         return self.emails
 
@@ -104,10 +105,10 @@ class Page(HTMLParser):
             url = 'http://' + url
 
         response = head(url)
-
+        
         if response.status_code == 301:
             url = url.replace('http://', 'https://')
-            response = head(url)
+            response = head(url)        
 
         if response.status_code == 200:
             contentType = response.headers['content-type']
@@ -116,21 +117,16 @@ class Page(HTMLParser):
                 return False
             try:
                 self.page_source = urllib.request.urlopen(url)
-                #self.page_source.read()
-                print('1:', type(self.page_source))
-                print('pimpek', self.page_source)
+
             except (URLError, InvalidURL) as e:
-                # page not found, probably 404
                 return False
+
         else:
             return False
-
         try:
-            print('2:', type(self.page_source))
             self.source_decoded = self.page_source.read().decode('utf8')
             self.feed(self.source_decoded)
         except UnicodeDecodeError:
-            print('error') # TODO: wtf is going on...?
             pass
 
         self.url = url

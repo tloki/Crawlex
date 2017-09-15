@@ -8,7 +8,7 @@ class MailFinder:
 
     def mail_finder(self):
         return set(self.compile.findall(self.def_source))
-        
+
 if __name__ == '__main__':
     temp = MailFinder(urllib.request.urlopen(input()).read().decode('utf8'))
     temp.mail_finder()

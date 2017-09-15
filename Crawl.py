@@ -31,12 +31,10 @@ class Crawl:
                         page_queue.append(local_url)
                         found_pages |= {local_url}
                         print(local_url)
-                        print(found_mails)
-                        
         print(visited_pages)
-        return visited_pages
+        return visited_pages, found_mails
 
 if __name__ == '__main__':
-    c = Crawl('http://www.python.org', 10**6, 10**6)
+    c = Crawl('icm.hr', 10**6, 10**6)
     r = c.crawl()
     print(len(r))
