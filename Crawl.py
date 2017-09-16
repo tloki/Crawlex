@@ -68,6 +68,19 @@ class Crawl:
             for e in (list(found_mails)):
                 mail_file.write(e+"\n")
 
+        with open("more_info.txt","w+") as more_info_file:
+            more_info_file.write("MORE INFO\n\n")
+            more_info_file.write("============================\n")
+            more_info_file.write("Number of nodes: " + str(self.graph.number_of_nodes())+"\n")
+            more_info_file.write("Number of edges: " + str(self.graph.number_of_edges())+"\n")
+            more_info_file.write("Number of self-loops: "+str(self.graph.number_of_selfloops())+"\n")
+            more_info_file.write("============================\n\n\n")
+
+            more_info_file.write("Made with Crawlex.\nCrawlex developed for ICM Summer of Code 2017 in Zagreb. \n ")
+
+
+
+
         self.pageRank(self.graph,self.links_iter)
         self.print("DONE!")
         #prl = []
