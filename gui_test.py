@@ -282,7 +282,12 @@ class App(QWidget):
 
         self.show()
 
-    #expand funkcija
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Enter:
+            print("DETECTED")
+            self.go_btn_click()
+
+    # expand funkcija
     def expand_click(self):
 
         self.alternate_bool = not self.alternate_bool
