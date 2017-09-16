@@ -284,7 +284,6 @@ class App(QWidget):
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Return:
-            print("DETECTED")
             self.go_btn_click()
 
     # expand funkcija
