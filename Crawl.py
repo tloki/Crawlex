@@ -2,7 +2,7 @@ import Page
 import networkx as nx
 import matplotlib.pyplot as plt
 from multiprocessing import Queue
-
+import time
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -32,9 +32,11 @@ class Crawl:
         visited_pages = set()
         found_pages = set()
         found_mails = set()
-
+        start = time()
+        end = time()
 
         for i in range(20):
+        #while page_queue>0 or self.max_depth >= depth or self.max_time >= end-start or self.max_iter >= local_iter
             self.print(len(page_queue))
             current_page, depth = page_queue.pop(0)
             self.graph.add_node(current_page)
@@ -53,6 +55,7 @@ class Crawl:
                         page_queue.append((local_url, depth+1))
                         found_pages |= {local_url}
                         self.print(local_url)
+            end = time()
 
         self.print(visited_pages)
 
@@ -65,7 +68,7 @@ class Crawl:
             self.page_ranks[i] *= 210
             #self.print(self.page_ranks[i])
         nx.draw_spring(self.graph, node_size=self.page_ranks, node_shape = 's')
-        plt.savefig("slikica.png",node_size=self.page_ranks)
+        plt.savefig("graph.png", node_size=self.page_ranks)
         return visited_pages, found_mails
 
     def pageRank(self,graph_arg, list_arg):
@@ -87,7 +90,7 @@ class Crawl:
 
 
 if __name__ == '__main__':
-    c = Crawl('icm.hr', 10**6, 10**6,2000)
+    c = Crawl('icm.hr', 10**6, 10**6, 2000)
     r = c.crawl()
-    #nx.draw_random(c.graph)
+    # nx.draw_random(c.graph)
     plt.show()
