@@ -39,7 +39,7 @@ class Crawl:
         #for i in range(20):
         uvijet = True
         while uvijet:
-            self.print(len(page_queue))
+            #self.print(len(page_queue))
             current_page, depth = page_queue.pop(0)
             self.graph.add_node(current_page)
 
@@ -63,9 +63,13 @@ class Crawl:
                     end = time()
                     local_iter+=1
 
-        self.print(visited_pages)
+        #self.print(visited_pages)
+        with open("mail_list.txt","w+") as mail_file:
+            for e in (list(found_mails)):
+                mail_file.write(e+"\n")
 
         self.pageRank(self.graph,self.links_iter)
+        self.print("DONE!")
         #prl = []
        # for i in range(len(self.links_iter)):
             #print(l[i].page_rank)

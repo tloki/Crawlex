@@ -59,13 +59,15 @@ class App(QWidget):
             temp_var = Q_arg.get(True)
             time.sleep(0.3)
 
+
             dump_list = str(temp_var) + "\n"
             for i in range(Q_arg.qsize()):
                 try:
                     dump_list += Q_arg.get(True) + "\n"
                 except:
                     break
-
+            if("DONE!" in dump_list):
+                self.status_label.setText("         Done")
             self.console_print(dump_list)
             pass
 
@@ -188,7 +190,7 @@ class App(QWidget):
         #depth limit label
         self.maxd_label = QLabel(self)
         self.maxd_label.move(170, 319)
-        self.maxd_label.setText("Depth iteration limit")
+        self.maxd_label.setText("Depth limit")
         self.maxd_label.setFont(info_font)
         self.maxd_label.setStyleSheet("color: rgba(255,255,255,0.77)")
 
@@ -264,12 +266,6 @@ class App(QWidget):
         self.expand_btn.setStyleSheet("background-color:rgba(255,255,255,0.5); border:none; color: rgba(50,50,50,0.7)")
         self.expand_btn.clicked.connect(self.expand_click)
 
-        #expanded textbox
-        self.maxd_label = QLabel(self)
-        self.maxd_label.move(170, 319)
-        self.maxd_label.setText("Depth iteration limit")
-        self.maxd_label.setFont(info_font)
-        self.maxd_label.setStyleSheet("color: rgba(255,255,255,0.77)")
 
         #text box
         console_font = QFont("Courier", 12)
@@ -413,7 +409,6 @@ class App(QWidget):
             #threads.append(self.t)
             self.t.start()
             #self.analyze.crawl()
-            self.status_label.setText("         Done")
             self.text_box.clear()
         else:
             self.status_label.setText("  Invalid input!!!")
