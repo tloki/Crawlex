@@ -244,7 +244,7 @@ class App(QWidget):
 
 
         about_font = QFont("Sans-Serif",14)
-        #about gumb
+        #about gumcmb
         self.about_btn = QPushButton("i",self)
         self.about_btn.move(750,455)
         self.about_btn.setFixedSize(20,20)
@@ -283,8 +283,7 @@ class App(QWidget):
         self.show()
 
     def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Enter:
-            print("DETECTED")
+        if event.key() == Qt.Key_Return:
             self.go_btn_click()
 
     # expand funkcija
