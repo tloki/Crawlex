@@ -4,6 +4,7 @@ from PyQt5.QtGui import QFont, QColor, QPixmap, QIcon, QFontDatabase, QTextCurso
 from PyQt5.QtCore import *
 from Crawl import *
 import re, multiprocessing, threading,time
+import os
 
 
 
@@ -218,6 +219,7 @@ class App(QWidget):
         self.mail_list_btn.setFixedWidth(140)
         self.mail_list_btn.setFixedHeight(37)
         self.mail_list_btn.setStyleSheet("color: rgba(50,50,50); background-color: rgba(255,255,255,0.7); border: none; ")
+        self.mail_list_btn.clicked.connect(self.mail_list_click)
 
         #graph photo button
         self.graph_photo_btn = QPushButton("Graph",self)
@@ -226,6 +228,7 @@ class App(QWidget):
         self.graph_photo_btn.setFixedWidth(140)
         self.graph_photo_btn.setFixedHeight(37)
         self.graph_photo_btn.setStyleSheet("color: rgba(50,50,50); background-color: rgba(255,255,255,0.7); border: none; ")
+        self.graph_photo_btn.clicked.connect(self.graph_click)
 
         #more info button
         self.more_info_btn = QPushButton("More info",self)
@@ -234,6 +237,7 @@ class App(QWidget):
         self.more_info_btn.setFixedWidth(140)
         self.more_info_btn.setFixedHeight(37)
         self.more_info_btn.setStyleSheet("color: rgba(50,50,50); background-color: rgba(255,255,255,0.7); border: none; ")
+        self.more_info_btn.clicked.connect(self.more_info_click)
 
         #waiting label
         self.status_label = QLabel(self)
@@ -420,6 +424,29 @@ class App(QWidget):
         self.text_box.insertPlainText("\n"+str(text_arg))
         self.text_box.setReadOnly(True)
         # self.text_box.moveCursor(QTextCursor.End)
+        return
+
+    def graph_click(self):
+        if os.path.isfile("graph.png"):
+            os.startfile("graph.png")
+        else:
+            self.status_label.setText("  Analyze first!")
+        return
+
+    def more_info_click(self):
+        if os.path.isfile("more_info.txt"):
+            os.startfile("more_info.txt")
+        else:
+            self.status_label.setText("  Analyze first!")
+        return
+
+
+    def mail_list_click(self):
+        if os.path.isfile("mail_list.txt"):
+            os.startfile("mail_list.txt")
+        else:
+            self.status_label.setText("  Analyze first!")
+
         return
 
 if __name__ == '__main__':
