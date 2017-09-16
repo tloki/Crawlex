@@ -2,7 +2,7 @@ import Page
 import networkx as nx
 import matplotlib.pyplot as plt
 from multiprocessing import Queue
-import time
+from time import time
 import warnings
 warnings.filterwarnings("ignore")
 
