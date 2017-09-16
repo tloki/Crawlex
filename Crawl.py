@@ -36,7 +36,7 @@ class Crawl:
 
         for i in range(20):
             self.print(len(page_queue))
-            current_page = page_queue.pop(0)
+            current_page, depth = page_queue.pop(0)
             self.graph.add_node(current_page)
 
             if current_page not in visited_pages:
