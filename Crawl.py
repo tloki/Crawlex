@@ -28,6 +28,7 @@ class Crawl:
 
     def crawl(self):
         depth = 0
+        local_iter = 0
         page_queue = [(self.start_url, depth)]
         visited_pages = set()
         found_pages = set()
@@ -35,8 +36,9 @@ class Crawl:
         start = time()
         end = time()
 
-        for i in range(20):
-        #while page_queue>0 or self.max_depth >= depth or self.max_time >= end-start or self.max_iter >= local_iter
+        #for i in range(20):
+        uvijet = True
+        while uvijet:
             self.print(len(page_queue))
             current_page, depth = page_queue.pop(0)
             self.graph.add_node(current_page)
@@ -55,7 +57,11 @@ class Crawl:
                         page_queue.append((local_url, depth+1))
                         found_pages |= {local_url}
                         self.print(local_url)
-            end = time()
+                    if not(len(page_queue) > 0 and self.max_depth >= depth and self.max_time >= end - start and self.max_iter >= local_iter):
+                        uvijet = False
+                        break
+                    end = time()
+                    local_iter+=1
 
         self.print(visited_pages)
 

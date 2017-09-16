@@ -36,7 +36,7 @@ class App(QWidget):
 
         #self.parsed_url = ""
 
-        self.MAXT = "1000"
+        self.MAXT = "5"
         self.MAXI = "1000"
         self.MAXD = "10"
 
@@ -162,7 +162,7 @@ class App(QWidget):
         # time limit label
         self.maxt_label = QLabel(self)
         self.maxt_label.move(170, 285)
-        self.maxt_label.setText("Time limit (miliseconds)")
+        self.maxt_label.setText("Time limit (seconds)")
         self.maxt_label.setFont(info_font)
         self.maxt_label.setStyleSheet("color: rgba(255,255,255,0.77)")
        # self.maxt_label.setStyleSheet("color: rgba(255,255,255,0.7)")
