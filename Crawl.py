@@ -65,8 +65,11 @@ class Crawl:
 
         #self.print(visited_pages)
         with open("mail_list.txt","w+") as mail_file:
+            mail_file.write("MAIL LIST\n\n")
+            mail_file.write("============================\n\n")
             for e in (list(found_mails)):
                 mail_file.write(e+"\n")
+            mail_file.write("\n============================")
 
         with open("more_info.txt","w+") as more_info_file:
             more_info_file.write("MORE INFO\n\n")
