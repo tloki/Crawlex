@@ -27,7 +27,8 @@ class Crawl:
         self.q.put(item)
 
     def crawl(self):
-        page_queue = [self.start_url]
+        depth = 0
+        page_queue = [(self.start_url, depth)]
         visited_pages = set()
         found_pages = set()
         found_mails = set()
@@ -49,7 +50,7 @@ class Crawl:
                     if local_url not in visited_pages and local_url not in found_pages:
                         self.links_iter.append(local_url)
                         self.page_ranks.append(1.0)
-                        page_queue.append(local_url)
+                        page_queue.append((local_url, depth+1))
                         found_pages |= {local_url}
                         self.print(local_url)
 
